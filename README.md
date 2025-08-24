@@ -61,8 +61,8 @@ A modern, clean web application that allows users to interact with four differen
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
-   cd s4-chat-app
+   git clone https://github.com/senapati484/s4-chat.git
+   cd s4-chat
    ```
 
 2. **Install dependencies**
