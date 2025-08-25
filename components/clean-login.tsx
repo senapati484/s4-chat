@@ -9,32 +9,64 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Sparkles, Zap, Brain, Gem } from "lucide-react";
+import { RiPerplexityLine, RiGeminiLine, RiClaudeLine } from "react-icons/ri";
+import { AiOutlineOpenAI } from "react-icons/ai";
+import { GiSpermWhale } from "react-icons/gi";
+import { Zap } from "lucide-react";
 
 interface CleanLoginProps {
   onLogin: (provider: "google" | "apple") => void;
 }
+
+const chatbotConfig = {
+  chatgpt: {
+    name: "ChatGPT 5",
+    icon: AiOutlineOpenAI,
+  },
+  gemini: {
+    name: "Gemini 2.5 Pro",
+    icon: RiGeminiLine,
+  },
+  grok: {
+    name: "Grok",
+    icon: Zap,
+  },
+  claude: {
+    name: "Claude Sonnet 4",
+    icon: RiClaudeLine,
+  },
+  deepSeek: {
+    name: "DeepSeek",
+    icon: GiSpermWhale,
+  },
+  perplexity: {
+    name: "Perplexity Pro",
+    icon: RiPerplexityLine,
+  },
+};
 
 export function CleanLogin({ onLogin }: CleanLoginProps) {
   const [isLoading, setIsLoading] = useState<string | null>(null);
 
   const handleLogin = async (provider: "google" | "apple") => {
     setIsLoading(provider);
-    // Simulate loading delay
     await new Promise((resolve) => setTimeout(resolve, 1500));
     onLogin(provider);
     setIsLoading(null);
   };
 
+  // Extract chatbot entries for reusability
+  const chatbotEntries = Object.entries(chatbotConfig);
+
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
+        {/* Top header with chatbot icons */}
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Sparkles className="h-8 w-8 text-gray-400" />
-            <Zap className="h-8 w-8 text-gray-400" />
-            <Brain className="h-8 w-8 text-gray-400" />
-            <Gem className="h-8 w-8 text-gray-400" />
+            {chatbotEntries.map(([key, { icon: Icon }]) => (
+              <Icon key={key} className="h-8 w-8 text-gray-400" />
+            ))}
           </div>
           <h1 className="text-4xl font-bold tracking-tight text-white">
             S4 Chat
@@ -44,6 +76,7 @@ export function CleanLogin({ onLogin }: CleanLoginProps) {
           </p>
         </div>
 
+        {/* Login Card */}
         <Card className="border-gray-800 bg-gray-900 shadow-xl">
           <CardHeader className="space-y-2 text-center pb-6">
             <CardTitle className="text-2xl font-semibold text-white">
@@ -53,7 +86,9 @@ export function CleanLogin({ onLogin }: CleanLoginProps) {
               Sign in to access ChatGPT, Grok, Claude, and Gemini simultaneously
             </CardDescription>
           </CardHeader>
+
           <CardContent className="space-y-4">
+            {/* Google Login */}
             <Button
               onClick={() => handleLogin("google")}
               disabled={isLoading !== null}
@@ -66,6 +101,7 @@ export function CleanLogin({ onLogin }: CleanLoginProps) {
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
+                  {/* Google SVG */}
                   <svg className="w-6 h-6" viewBox="0 0 24 24">
                     <path
                       fill="currentColor"
@@ -89,6 +125,7 @@ export function CleanLogin({ onLogin }: CleanLoginProps) {
               )}
             </Button>
 
+            {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-gray-700" />
@@ -98,6 +135,7 @@ export function CleanLogin({ onLogin }: CleanLoginProps) {
               </div>
             </div>
 
+            {/* Apple Login */}
             <Button
               onClick={() => handleLogin("apple")}
               disabled={isLoading !== null}
@@ -111,6 +149,7 @@ export function CleanLogin({ onLogin }: CleanLoginProps) {
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
+                  {/* Apple SVG */}
                   <svg
                     className="w-6 h-6"
                     viewBox="0 0 24 24"
@@ -125,6 +164,7 @@ export function CleanLogin({ onLogin }: CleanLoginProps) {
           </CardContent>
         </Card>
 
+        {/* Footer */}
         <div className="text-center space-y-2">
           <p className="text-sm text-gray-400">
             By signing in, you agree to our{" "}
@@ -138,22 +178,12 @@ export function CleanLogin({ onLogin }: CleanLoginProps) {
             .
           </p>
           <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
-            <span className="flex items-center gap-1">
-              <Sparkles className="h-3 w-3 text-gray-400" />
-              ChatGPT
-            </span>
-            <span className="flex items-center gap-1">
-              <Zap className="h-3 w-3 text-gray-400" />
-              Grok
-            </span>
-            <span className="flex items-center gap-1">
-              <Brain className="h-3 w-3 text-gray-400" />
-              Claude
-            </span>
-            <span className="flex items-center gap-1">
-              <Gem className="h-3 w-3 text-gray-400" />
-              Gemini
-            </span>
+            {chatbotEntries.map(([key, { name, icon: Icon }]) => (
+              <span key={key} className="flex items-center gap-1">
+                <Icon className="h-3 w-3 text-gray-400" />
+                {name}
+              </span>
+            ))}
           </div>
         </div>
       </div>

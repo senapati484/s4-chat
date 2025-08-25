@@ -156,8 +156,8 @@ export function ChatInput({
           className={cn(
             "rounded-2xl transition-all duration-200 overflow-hidden",
             isDarkMode
-              ? "bg-gray-900 ring-1 ring-gray-700"
-              : "bg-gray-100 ring-1 ring-gray-300"
+              ? "bg-gray-900/40 ring-1 ring-gray-700"
+              : "bg-white/70 ring-1 ring-gray-300"
           )}
         >
           <div className="p-3">
@@ -187,8 +187,8 @@ export function ChatInput({
                 className={cn(
                   "h-9 w-9 p-0 transition-all duration-200 rounded-xl",
                   isDarkMode
-                    ? "text-gray-300 hover:text-white hover:bg-gray-700"
-                    : "text-gray-600 hover:text-black hover:bg-gray-300"
+                    ? "text-gray-300 hover:text-white hover:bg-gray-800"
+                    : "text-gray-600 hover:text-black hover:bg-gray-200"
                 )}
               >
                 <PaperclipIcon className="w-5 h-5" />
@@ -199,8 +199,8 @@ export function ChatInput({
                 className={cn(
                   "h-9 w-9 p-0 transition-all duration-200 rounded-xl",
                   isDarkMode
-                    ? "text-gray-300 hover:text-white hover:bg-gray-700"
-                    : "text-gray-600 hover:text-black hover:bg-gray-300"
+                    ? "text-gray-300 hover:text-white hover:bg-gray-800"
+                    : "text-gray-600 hover:text-black hover:bg-gray-200"
                 )}
               >
                 <Wand2 className="w-5 h-5" />
@@ -215,11 +215,11 @@ export function ChatInput({
                   "h-9 w-9 p-0 transition-all duration-200 rounded-xl",
                   isDarkMode
                     ? isRecording || isListening
-                      ? "text-red-400 hover:text-red-300 hover:bg-gray-700"
-                      : "text-gray-300 hover:text-white hover:bg-gray-700"
+                      ? "text-red-400 hover:text-red-300 hover:bg-gray-800"
+                      : "text-gray-300 hover:text-white hover:bg-gray-800"
                     : isRecording || isListening
-                    ? "text-red-600 hover:text-red-500 hover:bg-gray-300"
-                    : "text-gray-600 hover:text-black hover:bg-gray-300"
+                    ? "text-red-600 hover:text-red-500 hover:bg-gray-200"
+                    : "text-gray-600 hover:text-black hover:bg-gray-200"
                 )}
               >
                 {isRecording || isListening ? (

@@ -1,31 +1,38 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import { MessageSquare, Plus, Trash2, ChevronLeft, ChevronRight, Clock } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import {
+  MessageSquare,
+  Plus,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Conversation {
-  id: string
-  title: string
-  createdAt: string
+  id: string;
+  title: string;
+  createdAt: string;
   messages: Array<{
-    id: string
-    content: string
-    role: "user" | "assistant"
-    timestamp: string
-    chatbotId?: string
-  }>
+    id: string;
+    content: string;
+    role: "user" | "assistant";
+    timestamp: string;
+    chatbotId?: string;
+  }>;
 }
 
 interface CleanSidebarProps {
-  conversations: Conversation[]
-  activeConversationId: string | null
-  onSelectConversation: (id: string) => void
-  onNewConversation: () => void
-  onDeleteConversation: (id: string) => void
+  conversations: Conversation[];
+  activeConversationId: string | null;
+  onSelectConversation: (id: string) => void;
+  onNewConversation: () => void;
+  onDeleteConversation: (id: string) => void;
 }
 
 export function CleanSidebar({
@@ -35,28 +42,31 @@ export function CleanSidebar({
   onNewConversation,
   onDeleteConversation,
 }: CleanSidebarProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
 
     if (diffInHours < 24) {
-      return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     } else if (diffInHours < 168) {
       // 7 days
-      return date.toLocaleDateString([], { weekday: "short" })
+      return date.toLocaleDateString([], { weekday: "short" });
     } else {
-      return date.toLocaleDateString([], { month: "short", day: "numeric" })
+      return date.toLocaleDateString([], { month: "short", day: "numeric" });
     }
-  }
+  };
 
   return (
     <div
       className={cn(
         "bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-300",
-        isCollapsed ? "w-16" : "w-80",
+        isCollapsed ? "w-16" : "w-80"
       )}
     >
       <div className="p-4 border-b border-sidebar-border">
@@ -72,7 +82,11 @@ export function CleanSidebar({
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="h-8 w-8 p-0 hover:bg-sidebar-accent/10"
           >
-            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            {isCollapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
           </Button>
         </div>
       </div>
@@ -82,7 +96,7 @@ export function CleanSidebar({
           onClick={onNewConversation}
           className={cn(
             "bg-sidebar-primary hover:bg-sidebar-primary/90 text-sidebar-primary-foreground font-[family-name:var(--font-dm-sans)]",
-            isCollapsed ? "w-8 h-8 p-0" : "w-full",
+            isCollapsed ? "w-8 h-8 p-0" : "w-full"
           )}
         >
           <Plus className="h-4 w-4" />
@@ -99,7 +113,8 @@ export function CleanSidebar({
               key={conversation.id}
               className={cn(
                 "group relative rounded-lg p-3 cursor-pointer transition-colors hover:bg-sidebar-accent/10",
-                activeConversationId === conversation.id && "bg-sidebar-accent/20",
+                activeConversationId === conversation.id &&
+                  "bg-sidebar-accent/20"
               )}
               onClick={() => onSelectConversation(conversation.id)}
             >
@@ -126,8 +141,8 @@ export function CleanSidebar({
                   size="sm"
                   className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/10 hover:text-destructive"
                   onClick={(e) => {
-                    e.stopPropagation()
-                    onDeleteConversation(conversation.id)
+                    e.stopPropagation();
+                    onDeleteConversation(conversation.id);
                   }}
                 >
                   <Trash2 className="h-3 w-3" />
@@ -150,5 +165,5 @@ export function CleanSidebar({
         </div>
       </ScrollArea>
     </div>
-  )
+  );
 }

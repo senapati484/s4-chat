@@ -2,25 +2,12 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
 import { ChatInput } from "@/components/chat-input";
-import {
-  Send,
-  Mic,
-  Wand2,
-  Image,
-  Paperclip,
-  Sparkles,
-  Zap,
-  Brain,
-  Gem,
-  ThumbsUp,
-  ThumbsDown,
-  Share,
-  ChevronRight,
-} from "lucide-react";
+import { Sparkles, Zap, ThumbsUp, ThumbsDown, Share } from "lucide-react";
+import { RiPerplexityLine, RiGeminiLine, RiClaudeLine } from "react-icons/ri";
+import { AiOutlineOpenAI } from "react-icons/ai";
+import { GiSpermWhale } from "react-icons/gi";
 import { cn } from "@/lib/utils";
 
 interface Conversation {
@@ -41,6 +28,8 @@ interface ChatbotStates {
   grok: boolean;
   claude: boolean;
   gemini: boolean;
+  deepSeek: boolean;
+  perplexity: boolean;
 }
 
 interface CleanChatInterfaceProps {
@@ -54,31 +43,27 @@ interface CleanChatInterfaceProps {
 const chatbotConfig = {
   chatgpt: {
     name: "ChatGPT 5",
-    icon: Sparkles,
-    color: "text-white",
-    bgColor: "bg-black",
-    borderColor: "border-gray-300",
+    icon: AiOutlineOpenAI,
+  },
+  gemini: {
+    name: "Gemini 2.5 Pro",
+    icon: RiGeminiLine,
   },
   grok: {
     name: "Grok",
     icon: Zap,
-    color: "text-white",
-    bgColor: "bg-black",
-    borderColor: "border-gray-300",
   },
   claude: {
     name: "Claude Sonnet 4",
-    icon: Brain,
-    color: "text-white",
-    bgColor: "bg-black",
-    borderColor: "border-gray-300",
+    icon: RiClaudeLine,
   },
-  gemini: {
-    name: "Gemini 2.5 Pro",
-    icon: Gem,
-    color: "text-white",
-    bgColor: "bg-black",
-    borderColor: "border-gray-300",
+  deepSeek: {
+    name: "DeepSeek",
+    icon: GiSpermWhale,
+  },
+  perplexity: {
+    name: "Perplexity Pro",
+    icon: RiPerplexityLine,
   },
 };
 
@@ -118,7 +103,6 @@ export function CleanChatInterface({
 
     setIsLoading(true);
 
-    // Simulate AI responses
     setTimeout(() => {
       const activeChatbots = Object.entries(chatbotStates).filter(
         ([_, isActive]) => isActive
@@ -128,7 +112,7 @@ export function CleanChatInterface({
         id: `${Date.now()}-${chatbotId}`,
         content: `This is a simulated response from ${
           chatbotConfig[chatbotId as keyof typeof chatbotConfig].name
-        }. In a real application, this would be the actual AI response.`,
+        }.`,
         role: "assistant" as const,
         timestamp: new Date().toISOString(),
         chatbotId,
@@ -140,10 +124,6 @@ export function CleanChatInterface({
     }, 2000);
   };
 
-  const activeChatbots = Object.entries(chatbotStates).filter(
-    ([_, isActive]) => isActive
-  );
-
   return (
     <div
       className={cn(
@@ -153,16 +133,11 @@ export function CleanChatInterface({
     >
       {/* Welcome Section */}
       {(!conversation || conversation.messages.length === 0) && (
-        <div
-          className={cn(
-            "flex-1 flex flex-col items-center justify-center p-8 text-center",
-            isDarkMode ? "bg-black" : "bg-white"
-          )}
-        >
+        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
           <div
             className={cn(
-              "w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-200",
-              isDarkMode ? "bg-gray-800" : "bg-gray-100"
+              "w-16 h-16 rounded-full flex items-center justify-center mb-6",
+              isDarkMode ? "bg-gray-800" : "bg-gray-200"
             )}
           >
             <Sparkles className="w-8 h-8" />
@@ -170,34 +145,17 @@ export function CleanChatInterface({
           <h1 className="text-3xl font-bold mb-4">Welcome to S4 Chat</h1>
           <p
             className={cn(
-              "text-lg mb-8 max-w-2xl transition-all duration-200",
+              "text-lg mb-8 max-w-2xl",
               isDarkMode ? "text-gray-400" : "text-gray-600"
             )}
           >
             Chat with multiple AI models simultaneously. Ask a question and get
-            responses from all active models side by side.
+            responses from all active models.
           </p>
-          <div className="flex items-center gap-6">
-            {Object.entries(chatbotConfig).map(([chatbotId, config]) => {
-              const Icon = config.icon;
-              return (
-                <div
-                  key={chatbotId}
-                  className={cn(
-                    "flex items-center gap-2 p-3 rounded-lg transition-all duration-200",
-                    isDarkMode ? "bg-gray-800" : "bg-gray-100"
-                  )}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="text-sm font-medium">{config.name}</span>
-                </div>
-              );
-            })}
-          </div>
         </div>
       )}
 
-      {/* Main Chat Area - Horizontally Scrollable */}
+      {/* Main Chat Area */}
       {conversation && conversation.messages.length > 0 && (
         <div className="flex-1 overflow-hidden">
           <div className="h-full overflow-x-auto scrollbar-hide">
@@ -216,7 +174,7 @@ export function CleanChatInterface({
                   <div
                     key={chatbotId}
                     className={cn(
-                      "flex flex-col border-r transition-all duration-300 flex-shrink-0",
+                      "flex flex-col border-r flex-shrink-0",
                       isActive ? "w-[500px]" : "w-16",
                       isDarkMode ? "border-gray-800" : "border-gray-200"
                     )}
@@ -224,84 +182,59 @@ export function CleanChatInterface({
                     {/* Chatbot Header */}
                     <div
                       className={cn(
-                        "p-4 border-b flex items-center justify-between flex-shrink-0",
+                        "p-4 border-b flex items-center justify-between",
                         isDarkMode
-                          ? "bg-gray-900 border-gray-800"
-                          : "bg-gray-50 border-gray-200"
+                          ? "bg-gray-900/40 border-gray-800"
+                          : "bg-white/70 border-gray-200"
                       )}
                     >
                       {isActive ? (
-                        <>
-                          <div className="flex items-center gap-2">
-                            <div
-                              className={cn(
-                                "p-2 rounded-lg transition-all duration-200",
-                                isDarkMode ? "bg-gray-800" : "bg-gray-200"
-                              )}
-                            >
-                              <Icon className="w-4 h-4" />
-                            </div>
-                            <span className="font-medium">{config.name}</span>
-                            {/* <Badge
-                              className={cn(
-                                "ml-2 transition-all duration-200",
-                                isDarkMode
-                                  ? "bg-green-600 text-white"
-                                  : "bg-green-100 text-green-800"
-                              )}
-                            >
-                              Active
-                            </Badge> */}
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={cn(
+                              "p-2 rounded-lg",
+                              isDarkMode ? "bg-gray-800" : "bg-gray-200"
+                            )}
+                          >
+                            <Icon className="w-4 h-4" />
                           </div>
-                          <Switch
-                            checked={isActive}
-                            onCheckedChange={() =>
-                              onToggleChatbot(chatbotId as keyof ChatbotStates)
-                            }
-                          />
-                        </>
+                          <span className="font-medium">{config.name}</span>
+                        </div>
                       ) : (
                         <div
-                          className="flex flex-col items-center h-full bg-gray-900 gap-2 w-full"
+                          className="flex flex-col items-center h-full gap-2 w-full"
                           onClick={() =>
                             onToggleChatbot(chatbotId as keyof ChatbotStates)
                           }
                         >
                           <div
                             className={cn(
-                              "p-2 rounded-lg transition-all duration-200",
+                              "p-2 rounded-lg",
                               isDarkMode ? "bg-gray-800" : "bg-gray-200"
                             )}
                           >
                             <Icon className="w-4 h-4" />
                           </div>
-                          {/* <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() =>
-                              onToggleChatbot(chatbotId as keyof ChatbotStates)
-                            }
-                            className={cn(
-                              "h-6 w-6 p-0 transition-all duration-200",
-                              isDarkMode
-                                ? "text-gray-400 hover:text-white hover:bg-gray-800"
-                                : "text-gray-600 hover:text-black hover:bg-gray-200"
-                            )}
-                          >
-                            <ChevronRight className="w-4 h-4" />
-                          </Button> */}
                         </div>
+                      )}
+                      {isActive && (
+                        <Switch
+                          checked={isActive}
+                          onCheckedChange={() =>
+                            onToggleChatbot(chatbotId as keyof ChatbotStates)
+                          }
+                        />
                       )}
                     </div>
 
-                    {/* Messages - Only show when active */}
+                    {/* Messages */}
                     {isActive && (
                       <div className="flex-1 overflow-y-auto p-4 space-y-4">
                         {chatbotMessages.map((message) => (
                           <div
                             key={message.id}
                             className={cn(
-                              "flex transition-all duration-200",
+                              "flex",
                               message.role === "user"
                                 ? "justify-end"
                                 : "justify-start"
@@ -309,7 +242,7 @@ export function CleanChatInterface({
                           >
                             <div
                               className={cn(
-                                "max-w-[85%] rounded-lg p-3 transition-all duration-200",
+                                "max-w-[85%] rounded-2xl px-4 py-2 text-sm",
                                 message.role === "user"
                                   ? isDarkMode
                                     ? "bg-blue-600 text-white"
@@ -319,11 +252,9 @@ export function CleanChatInterface({
                                   : "bg-gray-100 text-black"
                               )}
                             >
-                              <p className="text-sm leading-relaxed">
-                                {message.content}
-                              </p>
-                              {message.role === "assistant" && (
-                                <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-600">
+                              {message.content}
+                              {/* {message.role === "assistant" && isActive && (
+                                <div className="flex items-center gap-2 mt-2 pt-2 border-t text-xs opacity-70">
                                   <Button
                                     variant="ghost"
                                     size="sm"
@@ -346,15 +277,16 @@ export function CleanChatInterface({
                                     <Share className="w-3 h-3" />
                                   </Button>
                                 </div>
-                              )}
+                              )} */}
                             </div>
                           </div>
                         ))}
+
                         {isLoading && (
                           <div className="flex justify-start">
                             <div
                               className={cn(
-                                "max-w-[85%] rounded-lg p-3 transition-all duration-200",
+                                "max-w-[85%] rounded-2xl px-4 py-2 text-sm",
                                 isDarkMode
                                   ? "bg-gray-800 text-white"
                                   : "bg-gray-100 text-black"
@@ -362,7 +294,7 @@ export function CleanChatInterface({
                             >
                               <div className="flex items-center gap-2">
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
-                                <span className="text-sm">Thinking...</span>
+                                <span>Thinking...</span>
                               </div>
                             </div>
                           </div>
@@ -377,7 +309,7 @@ export function CleanChatInterface({
         </div>
       )}
 
-      {/* Chat Input Component */}
+      {/* Chat Input */}
       <ChatInput
         onSendMessage={handleSendMessage}
         isLoading={isLoading}
