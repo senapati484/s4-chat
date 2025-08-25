@@ -7,7 +7,7 @@ import axios from "axios";
 export async function POST(req: Request) {
     try {
         const { prompt } = await req.json(); // get input from body
-        const geminiModel = process.env.GEMINI_MODEL || "gemini-pro";
+        const geminiModel = process.env.GEMINI_MODEL || "gemini-2.0-flash";
         const geminiApiKey = process.env.GEMINI_API_KEY;
 
         if (!prompt) {
